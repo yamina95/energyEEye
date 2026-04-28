@@ -126,35 +126,29 @@
           <h3>Sign in</h3>
           <p class="card-subtitle">Enter your username and password</p>
 
-          <form id="loginForm">
-            <div class="input-group">
-              <label for="username">Username</label>
-              <input type="text" id="username" placeholder="Enter your username" required />
-            </div>
+<form id="loginForm">
+  <div class="input-group">
+    <label for="username">Username</label>
+    <input type="text" id="username" placeholder="Enter your username" required />
+  </div>
 
-            <div class="input-group">
-              <label for="password">Password</label>
-              <input type="password" id="password" placeholder="Enter your password" required />
-            </div>
+  <div class="input-group">
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="Enter your password" required />
+  </div>
 
-            <div class="signin-row">
-            <a href="#" onclick="forgotPassword()">Forgot password?</a>
-            </div>
+  <div class="signin-row">
+    <a href="#" onclick="forgotPassword()">Forgot password?</a>
+  </div>
 
-            <button type="submit" class="btn btn-primary full">Login</button>
-            <button type="button" class="btn btn-secondary full demo-btn" id="demoLoginBtn">
-             Try Demo Mode
-            </button>
-            <button type="button" id="demoLoginBtn" class="btn btn-secondary full">
-              Try Demo Mode
-            </button>
-       
-            <button type="button" class="btn btn-secondary full demo-btn" id="demoLoginBtn">
-              Try Demo Account
-            </button>
+  <button type="submit" class="btn btn-primary full">Login</button>
 
-            <p id="loginMessage" class="small-text error-text"></p>
-          </form>
+  <button type="button" class="btn btn-primary full demo-btn" id="demoLoginBtn">
+    Try Demo Mode
+  </button>
+
+  <p id="loginMessage" class="small-text error-text"></p>
+</form>
         </div>
 
         <div class="signin-card register-card">
