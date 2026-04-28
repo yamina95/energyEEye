@@ -17,7 +17,9 @@ async function apiGet(url, token) {
   if (!response.ok || result.status !== "success") {
     throw new Error(result.message || "Request failed");
   }
-
+function forgotPassword() {
+  alert("Password reset is not available yet. Please contact support.");
+}
   return result.data;
 }
 
