@@ -9,8 +9,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="dashboard-body">
 
+<body class="dashboard-body">
   <div class="dashboard-layout">
     <aside class="sidebar">
       <div class="sidebar-brand">
@@ -30,6 +30,7 @@
 
       <nav class="sidebar-nav">
         <a href="#" class="active">Dashboard</a>
+        <a href="#connectMeterSection">Connect Meter</a>
         <a href="#historySection">History</a>
         <a href="#alertsSection">Alerts</a>
         <a href="#settingsSection">Settings</a>
@@ -56,11 +57,13 @@
             <h3>Current Usage</h3>
             <span>Today</span>
           </div>
+
           <div class="usage-main">
             <div>
               <div class="usage-value" id="todayConsumption">0</div>
               <div class="usage-unit">kWh</div>
             </div>
+
             <div class="mini-stat-box">
               <span>This Month</span>
               <strong id="monthConsumptionTop">0 kWh</strong>
@@ -84,12 +87,118 @@
           <div class="bill-value" id="estimatedBill">0.00 DZD</div>
         </div>
 
+        <div class="main-card prediction-card">
+          <div class="card-head">
+            <h3>Prediction</h3>
+            <span>End of month</span>
+          </div>
+          <div class="bill-value" id="predictedMonth">0 kWh</div>
+          <p class="small-text" id="predictedBill">Estimated final bill: 0 DZD</p>
+        </div>
+
+        <div class="main-card ai-card">
+          <div class="card-head">
+            <h3>AI Meter Reading</h3>
+            <span>OCR Status</span>
+          </div>
+          <div class="ai-status">
+            <strong id="aiConfidence">96%</strong>
+            <p id="aiStatusText">Waiting for AI reading</p>
+          </div>
+        </div>
+        <div class="main-card">
+  <div class="card-head">
+    <h3>AI + IoT Source</h3>
+    <span>Live system</span>
+  </div>
+
+  <div class="settings-list">
+    <div class="setting-row">
+      <span>Device</span>
+      <strong>ESP32 Camera</strong>
+    </div>
+
+    <div class="setting-row">
+      <span>AI Model</span>
+      <strong>Meter OCR</strong>
+    </div>
+
+    <div class="setting-row">
+      <span>Status</span>
+      <strong>Connected</strong>
+    </div>
+
+    <div class="setting-row">
+      <span>Confidence</span>
+      <strong>96%</strong>
+    </div>
+  </div>
+</div>
+
         <div class="main-card alert-summary-card">
           <div class="card-head">
             <h3>Alert</h3>
             <span>Status</span>
           </div>
           <div class="alert-summary" id="statusText">No data</div>
+        </div>
+      </section>
+
+      <section class="dashboard-content-grid" id="connectMeterSection">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Connect Sonelgaz Meter</h3>
+            <span>Customer verification</span>
+          </div>
+
+          <form id="sonelgazMeterForm">
+            <div class="two-cols">
+              <div class="input-group">
+                <label>Sonelgaz Customer Number</label>
+                <input type="text" id="customerNumber" placeholder="Example: 45892136" required />
+              </div>
+
+              <div class="input-group">
+                <label>Meter Number</label>
+                <input type="text" id="newMeterNumber" placeholder="Example: MTR-2026-001" required />
+              </div>
+            </div>
+
+            <div class="two-cols">
+              <div class="input-group">
+                <label>Wilaya</label>
+                <input type="text" id="wilaya" placeholder="Example: Algiers" required />
+              </div>
+
+              <div class="input-group">
+                <label>Commune</label>
+                <input type="text" id="commune" placeholder="Example: Bab Ezzouar" required />
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label>Address</label>
+              <input type="text" id="meterAddress" placeholder="Full address" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary full">Connect Meter</button>
+            <p id="meterFormMessage" class="small-text"></p>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h3>How it works</h3>
+            <span>EnergyEye flow</span>
+          </div>
+
+          <div class="settings-list">
+            <div class="setting-row"><span>1</span><strong>Create account</strong></div>
+            <div class="setting-row"><span>2</span><strong>Connect Sonelgaz meter</strong></div>
+            <div class="setting-row"><span>3</span><strong>ESP32 captures meter image</strong></div>
+            <div class="setting-row"><span>4</span><strong>AI extracts the reading</strong></div>
+            <div class="setting-row"><span>5</span><strong>Dashboard updates automatically</strong></div>
+          </div>
         </div>
       </section>
 
@@ -107,6 +216,7 @@
             <h3>Recent Readings</h3>
             <span>Latest meter values</span>
           </div>
+
           <div class="table-wrap">
             <table class="history-table">
               <thead>
@@ -142,18 +252,22 @@
               <span>Meter ID</span>
               <strong id="meterIdText">-</strong>
             </div>
+
             <div class="setting-row">
               <span>Meter Number</span>
               <strong id="meterNumberText">-</strong>
             </div>
+
             <div class="setting-row">
               <span>Location</span>
               <strong id="meterLocationText">-</strong>
             </div>
+
             <div class="setting-row">
               <span>This Week</span>
               <strong id="weekConsumption">0 kWh</strong>
             </div>
+
             <div class="setting-row">
               <span>Status</span>
               <strong id="statusTextSecondary">-</strong>
