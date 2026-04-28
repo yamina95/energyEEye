@@ -168,6 +168,7 @@ async function setupDashboardPage() {
       dashboard.prepend(messageBox);
     }
   }
+updateAITimestamp();
 
   return;
 }
@@ -271,3 +272,8 @@ document.addEventListener("DOMContentLoaded", () => {
   setupRegisterForm();
   setupDashboardPage();
 });
+function updateAITimestamp() {
+  const now = new Date();
+  const formatted = now.toLocaleString();
+  setText("aiLastUpdate", `Last update: ${formatted}`);
+}
