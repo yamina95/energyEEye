@@ -53,7 +53,10 @@ function setupLoginPage() {
       }
 
       localStorage.setItem("energyeye_token", result.data.token);
-      localStorage.setItem("energyeye_user_name", result.data.user_name);
+      localStorage.setItem(
+  "energyeye_user_name",
+  result.data.user_name || result.data.username || username
+);
 
       window.location.href = "dashboard.html";
 
