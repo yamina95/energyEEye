@@ -857,3 +857,24 @@ img {
     font-size: 2.2rem;
   }
 }
+.register-card {
+  margin-top: 24px;
+}
+
+.demo-btn {
+  margin-top: 12px;
+}
+
+.success-text {
+  color: #16a34a;
+}
+
+.ai-status strong {
+  display: block;
+  font-size: 2rem;
+  color: #0a74d8;
+}
+
+.prediction-card .small-text {
+  text-align: left;
+}
