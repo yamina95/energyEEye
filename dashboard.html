@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EnergyEye Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="dashboard-body">
+
+  <div class="dashboard-layout">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo">
+          <span class="logo-mark"></span>
+          <span>EnergyEye</span>
+        </div>
+
+        <div class="user-mini">
+          <div class="avatar-circle" id="avatarLetter">U</div>
+          <div class="user-mini-text">
+            <small>Welcome</small>
+            <strong id="sidebarUserName">User</strong>
+          </div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="active">Dashboard</a>
+        <a href="#historySection">History</a>
+        <a href="#alertsSection">Alerts</a>
+        <a href="#settingsSection">Settings</a>
+      </nav>
+
+      <button class="btn btn-primary full logout-btn" id="logoutBtn">Logout</button>
+    </aside>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <div>
+          <p class="dashboard-label">Dashboard</p>
+          <h1 id="welcomeName">Welcome</h1>
+        </div>
+
+        <div class="topbar-actions">
+          <select id="meterSelect" class="meter-select"></select>
+        </div>
+      </div>
+
+      <section class="dashboard-grid-top">
+        <div class="main-card usage-card">
+          <div class="card-head">
+            <h3>Current Usage</h3>
+            <span>Today</span>
+          </div>
+          <div class="usage-main">
+            <div>
+              <div class="usage-value" id="todayConsumption">0</div>
+              <div class="usage-unit">kWh</div>
+            </div>
+            <div class="mini-stat-box">
+              <span>This Month</span>
+              <strong id="monthConsumptionTop">0 kWh</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="main-card average-card">
+          <div class="card-head">
+            <h3>Average Daily</h3>
+            <span>Month</span>
+          </div>
+          <div class="average-value" id="averageDaily">0 kWh</div>
+        </div>
+
+        <div class="main-card bill-card">
+          <div class="card-head">
+            <h3>Estimated Bill</h3>
+            <span>Month</span>
+          </div>
+          <div class="bill-value" id="estimatedBill">0.00 DZD</div>
+        </div>
+
+        <div class="main-card alert-summary-card">
+          <div class="card-head">
+            <h3>Alert</h3>
+            <span>Status</span>
+          </div>
+          <div class="alert-summary" id="statusText">No data</div>
+        </div>
+      </section>
+
+      <section class="dashboard-content-grid" id="historySection">
+        <div class="panel history-panel">
+          <div class="panel-header">
+            <h3>Consumption History</h3>
+            <span>Last 7 days</span>
+          </div>
+          <div class="bars" id="weeklyBars"></div>
+        </div>
+
+        <div class="panel history-table-panel">
+          <div class="panel-header">
+            <h3>Recent Readings</h3>
+            <span>Latest meter values</span>
+          </div>
+          <div class="table-wrap">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Meter Reading</th>
+                  <th>Meter ID</th>
+                </tr>
+              </thead>
+              <tbody id="readingsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard-content-grid" id="alertsSection">
+        <div class="panel alerts-panel">
+          <div class="panel-header">
+            <h3>Alerts</h3>
+            <span>Recent notifications</span>
+          </div>
+          <div class="alerts-list" id="alertsList"></div>
+        </div>
+
+        <div class="panel settings-panel" id="settingsSection">
+          <div class="panel-header">
+            <h3>Meter Settings</h3>
+            <span>Current selection</span>
+          </div>
+
+          <div class="settings-list">
+            <div class="setting-row">
+              <span>Meter ID</span>
+              <strong id="meterIdText">-</strong>
+            </div>
+            <div class="setting-row">
+              <span>Meter Number</span>
+              <strong id="meterNumberText">-</strong>
+            </div>
+            <div class="setting-row">
+              <span>Location</span>
+              <strong id="meterLocationText">-</strong>
+            </div>
+            <div class="setting-row">
+              <span>This Week</span>
+              <strong id="weekConsumption">0 kWh</strong>
+            </div>
+            <div class="setting-row">
+              <span>Status</span>
+              <strong id="statusTextSecondary">-</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
