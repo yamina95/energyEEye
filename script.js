@@ -143,9 +143,34 @@ async function setupDashboardPage() {
     const meters = data.meters;
 
     if (!meters.length) {
-      meterSelect.innerHTML = `<option>No meters</option>`;
-      return;
+  meterSelect.innerHTML = `<option>No meters</option>`;
+
+  const dashboard = document.querySelector(".dashboard-main");
+
+  if (dashboard) {
+    const existingMessage = document.getElementById("noMeterMessage");
+
+    if (!existingMessage) {
+      const messageBox = document.createElement("div");
+      messageBox.id = "noMeterMessage";
+      messageBox.style.margin = "20px";
+      messageBox.style.padding = "20px";
+      messageBox.style.background = "#fff3cd";
+      messageBox.style.borderRadius = "10px";
+      messageBox.style.color = "#856404";
+      messageBox.style.fontWeight = "600";
+
+      messageBox.innerHTML = `
+        No meter connected yet.<br>
+        Connect your Sonelgaz meter to start tracking consumption.
+      `;
+
+      dashboard.prepend(messageBox);
     }
+  }
+
+  return;
+}
 
     meterSelect.innerHTML = meters.map(m =>
       `<option value="${m.id}">${m.meter_number}</option>`
