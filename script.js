@@ -115,6 +115,46 @@ function setupRegisterForm() {
     }
   });
 }
+async function registerUser() {
+  const username = document.getElementById("registerUsername").value.trim();
+  const email = document.getElementById("registerEmail").value.trim();
+  const password = document.getElementById("registerPassword").value.trim();
+  const message = document.getElementById("registerMessage");
+
+  message.textContent = "";
+
+  try {
+    const res = await fetch(`${API_BASE}/api/users/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: username,
+        email: email,
+        password: password
+      })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || data.status !== "success") {
+      message.textContent = data.message || "Registration failed.";
+      message.style.color = "red";
+      return;
+    }
+
+    message.textContent = "Account created successfully. You can now login.";
+    message.style.color = "green";
+
+    document.getElementById("username").value = username;
+    document.getElementById("password").value = password;
+
+  } catch (error) {
+    message.textContent = "Error connecting to server.";
+    message.style.color = "red";
+  }
+}
 
 //////////////////////////
 // DASHBOARD
