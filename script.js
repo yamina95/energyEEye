@@ -71,14 +71,7 @@ function setupLoginPage() {
     }
   });
 
-  const demoBtn = document.getElementById("demoLoginBtn");
-  if (demoBtn) {
-    demoBtn.addEventListener("click", function () {
-      document.getElementById("username").value = "demo";
-      document.getElementById("password").value = "demo123";
-      loginForm.dispatchEvent(new Event("submit"));
-    });
-  }
+
 }
 
 function setupRegisterForm() {
@@ -418,6 +411,14 @@ function updateAITimestamp() {
 
 document.addEventListener("DOMContentLoaded", function () {
   setupLoginPage();
+    const demoBtn = document.getElementById("demoLoginBtn");
+  if (demoBtn) {
+    demoBtn.addEventListener("click", function () {
+      document.getElementById("username").value = "demo";
+      document.getElementById("password").value = "demo123";
+      loginForm.dispatchEvent(new Event("submit"));
+    });
+  }
   setupRegisterForm();
   setupDashboardPage();
 });
