@@ -212,33 +212,50 @@ async function setupDashboardPage() {
     try {
       const data = await apiGet(`${API_BASE}/api/meters`, token);
       const meters = data.meters || [];
+if (!meters.length) {
+  const userName = localStorage.getItem("energyeye_user_name");
 
-      if (!meters.length) {
-        meterSelect.innerHTML = `<option value="">No meters</option>`;
+  // 👉 skip warning for demo account
+  if (userName === "demo") {
+    meterSelect.innerHTML = `
+      <option value="demo-meter">
+        SONELGAZ-MTR-001
+      </option>
+    `;
 
-        const dashboard = document.querySelector(".dashboard-main");
+    setText("meterIdText", "demo-meter");
+    setText("meterNumberText", "SONELGAZ-MTR-001");
+    setText("meterLocationText", "Algiers, Bab Ezzouar");
 
-        if (dashboard && !document.getElementById("noMeterMessage")) {
-          const messageBox = document.createElement("div");
-          messageBox.id = "noMeterMessage";
-          messageBox.style.marginBottom = "18px";
-          messageBox.style.padding = "20px";
-          messageBox.style.background = "#fff3cd";
-          messageBox.style.borderRadius = "14px";
-          messageBox.style.color = "#856404";
-          messageBox.style.fontWeight = "600";
+    updateAITimestamp();
+    return;
+  }
 
-          messageBox.innerHTML = `
-            No meter connected yet.<br>
-            Connect your Sonelgaz meter to start tracking consumption.
-          `;
+  // normal users still see warning
+  meterSelect.innerHTML = `<option value="">No meters</option>`;
 
-          dashboard.prepend(messageBox);
-        }
+  const dashboard = document.querySelector(".dashboard-main");
 
-        updateAITimestamp();
-        return;
-      }
+  if (dashboard && !document.getElementById("noMeterMessage")) {
+    const messageBox = document.createElement("div");
+    messageBox.id = "noMeterMessage";
+    messageBox.style.marginBottom = "18px";
+    messageBox.style.padding = "20px";
+    messageBox.style.background = "#fff3cd";
+    messageBox.style.borderRadius = "14px";
+    messageBox.style.color = "#856404";
+    messageBox.style.fontWeight = "600";
+
+    messageBox.innerHTML = `
+      No meter connected yet.<br>
+      Connect your Sonelgaz meter to start tracking consumption.
+    `;
+
+    dashboard.prepend(messageBox);
+  }
+
+  return;
+}
 
       const oldMessage = document.getElementById("noMeterMessage");
       if (oldMessage) oldMessage.remove();
