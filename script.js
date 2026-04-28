@@ -271,7 +271,29 @@ async function setupDashboardPage() {
 
   async function loadDashboard() {
     const meterId = meterSelect.value;
+   // 🔥 DEMO DATA OVERRIDE
+const userName = localStorage.getItem("energyeye_user_name");
 
+if (userName === "demo") {
+  setText("todayConsumption", "18.5");
+  setText("weekConsumption", "102.3 kWh");
+  setText("monthConsumptionTop", "245.0 kWh");
+  setText("averageDaily", "8.2 kWh");
+  setText("estimatedBill", "1225.00 DZD");
+
+  setText("predictedMonth", "310.0 kWh");
+  setText("predictedBill", "Estimated final bill: 1550.00 DZD");
+
+  setText("aiConfidence", "96%");
+  setText("aiStatusText", "AI reading verified");
+
+  setText("statusText", "High usage detected yesterday");
+  setText("statusTextSecondary", "High usage detected yesterday");
+
+  updateAITimestamp();
+
+  return; // ⛔ skip real API
+}
     if (!meterId) {
       return;
     }
