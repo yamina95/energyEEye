@@ -154,10 +154,12 @@ function renderReadings(readings) {
 
 async function setupDashboardPage() {
   const meterSelect = document.getElementById("meterSelect");
-  if (!meterSelect) return;
+
+  if (!meterSelect) {
+    return;
+  }
 
   const token = localStorage.getItem("energyeye_token");
-  const userName = localStorage.getItem("energyeye_user_name") || "User";
 
   if (!token) {
     window.location.href = "index.html";
