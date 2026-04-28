@@ -17,15 +17,13 @@ async function apiGet(url, token) {
   if (!response.ok || result.status !== "success") {
     throw new Error(result.message || "Request failed");
   }
-function forgotPassword() {
-  alert("Password reset is not available yet. Please contact support.");
-}
+
   return result.data;
 }
 
-//////////////////////////
-// LOGIN
-//////////////////////////
+function forgotPassword() {
+  alert("Password reset is not available yet. Please contact EnergyEye support.");
+}
 
 function setupLoginPage() {
   const loginForm = document.getElementById("loginForm");
@@ -43,44 +41,45 @@ function setupLoginPage() {
     try {
       const res = await fetch(`${API_BASE}/api/users/login`, {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ username, password })
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username,
+          password
+        })
       });
 
       const result = await res.json();
 
       if (!res.ok || result.status !== "success") {
-        loginMessage.textContent = result.message;
+        loginMessage.textContent = result.message || "Login failed.";
         return;
       }
 
       localStorage.setItem("energyeye_token", result.data.token);
       localStorage.setItem(
-  "energyeye_user_name",
-  result.data.user_name || result.data.username || username
-);
+        "energyeye_user_name",
+        result.data.user_name || result.data.username || username
+      );
 
       window.location.href = "dashboard.html";
 
     } catch (err) {
+      console.error("LOGIN ERROR:", err);
       loginMessage.textContent = "Server error.";
     }
   });
 
-  // DEMO LOGIN
   const demoBtn = document.getElementById("demoLoginBtn");
   if (demoBtn) {
-    demoBtn.addEventListener("click", () => {
+    demoBtn.addEventListener("click", function () {
       document.getElementById("username").value = "demo";
       document.getElementById("password").value = "demo123";
       loginForm.dispatchEvent(new Event("submit"));
     });
   }
 }
-
-//////////////////////////
-// REGISTER
-//////////////////////////
 
 function setupRegisterForm() {
   const form = document.getElementById("registerForm");
@@ -89,34 +88,51 @@ function setupRegisterForm() {
   form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    const username = document.getElementById("registerUsername").value;
-    const email = document.getElementById("registerEmail").value;
-    const password = document.getElementById("registerPassword").value;
+    const username = document.getElementById("registerUsername").value.trim();
+    const email = document.getElementById("registerEmail").value.trim();
+    const password = document.getElementById("registerPassword").value.trim();
     const msg = document.getElementById("registerMessage");
+
+    msg.textContent = "";
 
     try {
       const res = await fetch(`${API_BASE}/api/users/register`, {
         method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ username, email, password })
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password
+        })
       });
 
       const result = await res.json();
 
       if (!res.ok || result.status !== "success") {
-        msg.textContent = result.message;
+        msg.textContent = result.message || "Registration failed.";
         msg.className = "small-text error-text";
         return;
       }
 
-      msg.textContent = "Account created!";
+      msg.textContent = "Account created successfully. You can now login.";
       msg.className = "small-text success-text";
 
-    } catch {
+      const loginUsername = document.getElementById("username");
+      const loginPassword = document.getElementById("password");
+
+      if (loginUsername) loginUsername.value = username;
+      if (loginPassword) loginPassword.value = password;
+
+    } catch (err) {
+      console.error("REGISTER ERROR:", err);
       msg.textContent = "Server error.";
+      msg.className = "small-text error-text";
     }
   });
 }
+
 async function registerUser() {
   const username = document.getElementById("registerUsername").value.trim();
   const email = document.getElementById("registerEmail").value.trim();
@@ -132,9 +148,9 @@ async function registerUser() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        username: username,
-        email: email,
-        password: password
+        username,
+        email,
+        password
       })
     });
 
@@ -149,21 +165,28 @@ async function registerUser() {
     message.textContent = "Account created successfully. You can now login.";
     message.style.color = "green";
 
-    document.getElementById("username").value = username;
-    document.getElementById("password").value = password;
+    const loginUsername = document.getElementById("username");
+    const loginPassword = document.getElementById("password");
+
+    if (loginUsername) loginUsername.value = username;
+    if (loginPassword) loginPassword.value = password;
 
   } catch (error) {
+    console.error("REGISTER USER ERROR:", error);
     message.textContent = "Error connecting to server.";
     message.style.color = "red";
   }
 }
 
-//////////////////////////
-// DASHBOARD
-//////////////////////////
-
 async function setupDashboardPage() {
+  const meterSelect = document.getElementById("meterSelect");
+
+  if (!meterSelect) {
+    return;
+  }
+
   const token = localStorage.getItem("energyeye_token");
+
   if (!token) {
     window.location.href = "index.html";
     return;
@@ -173,106 +196,152 @@ async function setupDashboardPage() {
 
   setText("welcomeName", `Welcome, ${userName}`);
   setText("sidebarUserName", userName);
-  setText("avatarLetter", userName.charAt(0));
+  setText("avatarLetter", userName.charAt(0).toUpperCase());
 
-  const meterSelect = document.getElementById("meterSelect");
+  const logoutBtn = document.getElementById("logoutBtn");
 
-  //////////////////////////
-  // LOAD METERS
-  //////////////////////////
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", function () {
+      localStorage.removeItem("energyeye_token");
+      localStorage.removeItem("energyeye_user_name");
+      window.location.href = "index.html";
+    });
+  }
+
   async function loadMeters() {
-    const data = await apiGet(`${API_BASE}/api/meters`, token);
-    const meters = data.meters;
+    try {
+      const data = await apiGet(`${API_BASE}/api/meters`, token);
+      const meters = data.meters || [];
 
-    if (!meters.length) {
-  meterSelect.innerHTML = `<option>No meters</option>`;
+      if (!meters.length) {
+        meterSelect.innerHTML = `<option value="">No meters</option>`;
 
-  const dashboard = document.querySelector(".dashboard-main");
+        const dashboard = document.querySelector(".dashboard-main");
 
-  if (dashboard) {
-    const existingMessage = document.getElementById("noMeterMessage");
+        if (dashboard && !document.getElementById("noMeterMessage")) {
+          const messageBox = document.createElement("div");
+          messageBox.id = "noMeterMessage";
+          messageBox.style.marginBottom = "18px";
+          messageBox.style.padding = "20px";
+          messageBox.style.background = "#fff3cd";
+          messageBox.style.borderRadius = "14px";
+          messageBox.style.color = "#856404";
+          messageBox.style.fontWeight = "600";
 
-    if (!existingMessage) {
-      const messageBox = document.createElement("div");
-      messageBox.id = "noMeterMessage";
-      messageBox.style.margin = "20px";
-      messageBox.style.padding = "20px";
-      messageBox.style.background = "#fff3cd";
-      messageBox.style.borderRadius = "10px";
-      messageBox.style.color = "#856404";
-      messageBox.style.fontWeight = "600";
+          messageBox.innerHTML = `
+            No meter connected yet.<br>
+            Connect your Sonelgaz meter to start tracking consumption.
+          `;
 
-      messageBox.innerHTML = `
-        No meter connected yet.<br>
-        Connect your Sonelgaz meter to start tracking consumption.
-      `;
+          dashboard.prepend(messageBox);
+        }
 
-      dashboard.prepend(messageBox);
+        updateAITimestamp();
+        return;
+      }
+
+      const oldMessage = document.getElementById("noMeterMessage");
+      if (oldMessage) oldMessage.remove();
+
+      meterSelect.innerHTML = meters.map(m => `
+        <option 
+          value="${m.id}" 
+          data-number="${m.meter_number}" 
+          data-location="${m.location}">
+          ${m.meter_number}
+        </option>
+      `).join("");
+
+      updateMeterInfo();
+
+    } catch (err) {
+      console.error("LOAD METERS ERROR:", err);
     }
   }
-updateAITimestamp();
 
-  return;
-}
+  function updateMeterInfo() {
+    const selected = meterSelect.options[meterSelect.selectedIndex];
 
-    meterSelect.innerHTML = meters.map(m =>
-      `<option value="${m.id}">${m.meter_number}</option>`
-    ).join("");
+    if (!selected) return;
+
+    setText("meterIdText", selected.value || "-");
+    setText("meterNumberText", selected.dataset.number || "-");
+    setText("meterLocationText", selected.dataset.location || "-");
   }
 
-  //////////////////////////
-  // DASHBOARD DATA
-  //////////////////////////
   async function loadDashboard() {
     const meterId = meterSelect.value;
-    if (!meterId) return;
+
+    if (!meterId) {
+      return;
+    }
 
     try {
-      const [today, month, billing] = await Promise.all([
+      const [today, week, month, billing] = await Promise.all([
         apiGet(`${API_BASE}/api/consumption/summary?period=today&meter_id=${meterId}`, token),
+        apiGet(`${API_BASE}/api/consumption/summary?period=week&meter_id=${meterId}`, token),
         apiGet(`${API_BASE}/api/consumption/summary?period=month&meter_id=${meterId}`, token),
         apiGet(`${API_BASE}/api/billing?meter_id=${meterId}&start=2026-01-01&end=2026-12-31&price=5`, token)
       ]);
 
       const todayVal = Number(today.total_consumption || 0);
+      const weekVal = Number(week.total_consumption || 0);
+      const monthVal = Number(month.total_consumption || 0);
       const avg = Number(month.average_daily || 0);
+      const bill = Number(billing.total_cost || 0);
 
-      setText("todayConsumption", todayVal);
-      setText("averageDaily", avg + " kWh");
-      setText("estimatedBill", billing.total_cost + " DZD");
+      setText("todayConsumption", todayVal.toFixed(1));
+      setText("weekConsumption", `${weekVal.toFixed(1)} kWh`);
+      setText("monthConsumptionTop", `${monthVal.toFixed(1)} kWh`);
+      setText("averageDaily", `${avg.toFixed(1)} kWh`);
+      setText("estimatedBill", `${bill.toFixed(2)} DZD`);
 
-      // PREDICTION
       const predicted = avg * 30;
-      setText("predictedMonth", predicted.toFixed(1) + " kWh");
-      setText("predictedBill", "Estimated final bill: " + (predicted * 5).toFixed(2) + " DZD");
+      const predictedBill = predicted * 5;
 
-      // AI STATUS
+      setText("predictedMonth", `${predicted.toFixed(1)} kWh`);
+      setText("predictedBill", `Estimated final bill: ${predictedBill.toFixed(2)} DZD`);
+
       setText("aiConfidence", "96%");
       setText("aiStatusText", "AI reading verified");
 
+      let status = "Normal";
+
+      if (todayVal > 50) {
+        status = "High usage warning";
+      } else if (todayVal < 10) {
+        status = "Low usage";
+      }
+
+      setText("statusText", status);
+      setText("statusTextSecondary", status);
+
+      updateAITimestamp();
+
     } catch (err) {
-      console.error(err);
+      console.error("LOAD DASHBOARD ERROR:", err);
     }
   }
 
-  //////////////////////////
-  // SONELGAZ FORM
-  //////////////////////////
-  const form = document.getElementById("sonelgazMeterForm");
+  const sonelgazForm = document.getElementById("sonelgazMeterForm");
 
-  if (form) {
-    form.addEventListener("submit", async function (e) {
+  if (sonelgazForm) {
+    sonelgazForm.addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      const meterNumber = document.getElementById("newMeterNumber").value;
-      const wilaya = document.getElementById("wilaya").value;
-      const commune = document.getElementById("commune").value;
-      const address = document.getElementById("meterAddress").value;
+      const customerNumber = document.getElementById("customerNumber").value.trim();
+      const meterNumber = document.getElementById("newMeterNumber").value.trim();
+      const wilaya = document.getElementById("wilaya").value.trim();
+      const commune = document.getElementById("commune").value.trim();
+      const address = document.getElementById("meterAddress").value.trim();
+      const message = document.getElementById("meterFormMessage");
 
-      const location = `${wilaya}, ${commune}, ${address}`;
+      const location = `${wilaya}, ${commune}, ${address} | Sonelgaz Customer No: ${customerNumber}`;
+
+      message.textContent = "";
 
       try {
-        await fetch(`${API_BASE}/api/meters`, {
+        const res = await fetch(`${API_BASE}/api/meters`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -280,42 +349,70 @@ updateAITimestamp();
           },
           body: JSON.stringify({
             meter_number: meterNumber,
-            location: location
+            location
           })
         });
 
-        alert("Meter connected!");
-        await loadMeters();
+        const result = await res.json();
 
-      } catch {
-        alert("Error connecting meter");
+        if (!res.ok || result.status !== "success") {
+          message.textContent = result.message || "Could not connect meter.";
+          message.className = "small-text error-text";
+          return;
+        }
+
+        message.textContent = "Sonelgaz meter connected successfully.";
+        message.className = "small-text success-text";
+
+        sonelgazForm.reset();
+
+        await loadMeters();
+        await loadDashboard();
+
+      } catch (err) {
+        console.error("CONNECT METER ERROR:", err);
+        message.textContent = "Error connecting meter.";
+        message.className = "small-text error-text";
       }
     });
   }
 
-  //////////////////////////
-  // INIT
-  //////////////////////////
-
   await loadMeters();
   await loadDashboard();
 
-  meterSelect.addEventListener("change", loadDashboard);
+  meterSelect.addEventListener("change", async function () {
+    updateMeterInfo();
+    await loadDashboard();
+  });
 
   setInterval(loadDashboard, 5000);
 }
 
-//////////////////////////
-// INIT
-//////////////////////////
-
-document.addEventListener("DOMContentLoaded", () => {
-  setupLoginPage();
-  setupRegisterForm();
-  setupDashboardPage();
-});
 function updateAITimestamp() {
   const now = new Date();
   const formatted = now.toLocaleString();
   setText("aiLastUpdate", `Last update: ${formatted}`);
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  setupLoginPage();
+  const demoBtn = document.getElementById("demoLoginBtn");
+if (demoBtn) {
+  demoBtn.addEventListener("click", function () {
+    document.getElementById("username").value = "demo";
+    document.getElementById("password").value = "demo123";
+    loginForm.dispatchEvent(new Event("submit"));
+  });
+}
+const demoBtn = document.getElementById("demoLoginBtn");
+
+if (demoBtn) {
+  demoBtn.addEventListener("click", function () {
+    document.getElementById("username").value = "demo";
+    document.getElementById("password").value = "demo123";
+    loginForm.dispatchEvent(new Event("submit"));
+  });
+}
+  setupRegisterForm();
+  setupDashboardPage();
+});
