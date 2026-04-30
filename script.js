@@ -80,13 +80,22 @@ function setupLoginPage() {
     });
   }
 }
-async function update() {
-  const res = await fetch("https://energy-eye-server-7uxs.onrender.com/latest");
-  const data = await res.json();
+async function loadLatestAIReading() {
+  try {
+    const response = await fetch("https://energy-eye-server-7uxs.onrender.com/latest");
+    const data = await response.json();
 
-  document.getElementById("reading").innerText = data.reading;
-  document.getElementById("confidence").innerText = data.avg_confidence;
+    console.log("Latest AI data:", data);
+
+    document.getElementById("aiReading").textContent = data.reading;
+    document.getElementById("aiConfidence").textContent =
+      Math.round(data.avg_confidence * 100) + "%";
+  } catch (error) {
+    console.error("Error loading latest AI reading:", error);
+  }
 }
+
+
 
 setInterval(update, 2000);
 
