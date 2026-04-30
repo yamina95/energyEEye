@@ -80,6 +80,15 @@ function setupLoginPage() {
     });
   }
 }
+async function update() {
+  const res = await fetch("https://energy-eye-server-7uxs.onrender.com/latest");
+  const data = await res.json();
+
+  document.getElementById("reading").innerText = data.reading;
+  document.getElementById("confidence").innerText = data.avg_confidence;
+}
+
+setInterval(update, 2000);
 
 function setupRegisterForm() {
   const form = document.getElementById("registerForm");
