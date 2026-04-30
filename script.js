@@ -1,4 +1,5 @@
 const API_BASE = "https://energyeye.onrender.com";
+const AI_API_BASE = "https://energy-eye-server-7uxs.onrender.com";
 
 function setText(id, value) {
   const el = document.getElementById(id);
@@ -80,24 +81,33 @@ function setupLoginPage() {
     });
   }
 }
+
 async function loadLatestAIReading() {
   try {
-    const response = await fetch("https://energy-eye-server-7uxs.onrender.com/latest");
+    const response = await fetch(`${AI_API_BASE}/latest`);
+
+    if (!response.ok) {
+      throw new Error("AI server error: " + response.status);
+    }
+
     const data = await response.json();
 
-    console.log("Latest AI data:", data);
+    console.log("LATEST AI DATA:", data);
 
-    document.getElementById("aiReading").textContent = data.reading;
-    document.getElementById("aiConfidence").textContent =
-      Math.round(data.avg_confidence * 100) + "%";
+    const reading = data.reading || "--";
+    const confidence = Number(data.avg_confidence || 0);
+
+    setText("aiReading", `${reading} kWh`);
+    setText("aiConfidence", `${Math.round(confidence * 100)}%`);
+    setText("aiStatusText", "AI reading received");
+
+    updateAITimestamp();
+
   } catch (error) {
-    console.error("Error loading latest AI reading:", error);
+    console.error("AI FETCH ERROR:", error);
+    setText("aiStatusText", "Waiting for AI reading");
   }
 }
-
-
-
-setInterval(update, 2000);
 
 function setupRegisterForm() {
   const form = document.getElementById("registerForm");
@@ -230,50 +240,46 @@ async function setupDashboardPage() {
     try {
       const data = await apiGet(`${API_BASE}/api/meters`, token);
       const meters = data.meters || [];
-if (!meters.length) {
-  const userName = localStorage.getItem("energyeye_user_name");
 
-  // 👉 skip warning for demo account
-  if (userName === "demo") {
-    meterSelect.innerHTML = `
-      <option value="demo-meter">
-        SONELGAZ-MTR-001
-      </option>
-    `;
+      if (!meters.length) {
+        if (userName === "demo") {
+          meterSelect.innerHTML = `
+            <option value="demo-meter" data-number="SONELGAZ-MTR-001" data-location="Algiers, Bab Ezzouar">
+              SONELGAZ-MTR-001
+            </option>
+          `;
 
-    setText("meterIdText", "demo-meter");
-    setText("meterNumberText", "SONELGAZ-MTR-001");
-    setText("meterLocationText", "Algiers, Bab Ezzouar");
+          setText("meterIdText", "demo-meter");
+          setText("meterNumberText", "SONELGAZ-MTR-001");
+          setText("meterLocationText", "Algiers, Bab Ezzouar");
 
-    updateAITimestamp();
-    return;
-  }
+          return;
+        }
 
-  // normal users still see warning
-  meterSelect.innerHTML = `<option value="">No meters</option>`;
+        meterSelect.innerHTML = `<option value="">No meters</option>`;
 
-  const dashboard = document.querySelector(".dashboard-main");
+        const dashboard = document.querySelector(".dashboard-main");
 
-  if (dashboard && !document.getElementById("noMeterMessage")) {
-    const messageBox = document.createElement("div");
-    messageBox.id = "noMeterMessage";
-    messageBox.style.marginBottom = "18px";
-    messageBox.style.padding = "20px";
-    messageBox.style.background = "#fff3cd";
-    messageBox.style.borderRadius = "14px";
-    messageBox.style.color = "#856404";
-    messageBox.style.fontWeight = "600";
+        if (dashboard && !document.getElementById("noMeterMessage")) {
+          const messageBox = document.createElement("div");
+          messageBox.id = "noMeterMessage";
+          messageBox.style.marginBottom = "18px";
+          messageBox.style.padding = "20px";
+          messageBox.style.background = "#fff3cd";
+          messageBox.style.borderRadius = "14px";
+          messageBox.style.color = "#856404";
+          messageBox.style.fontWeight = "600";
 
-    messageBox.innerHTML = `
-      No meter connected yet.<br>
-      Connect your Sonelgaz meter to start tracking consumption.
-    `;
+          messageBox.innerHTML = `
+            No meter connected yet.<br>
+            Connect your Sonelgaz meter to start tracking consumption.
+          `;
 
-    dashboard.prepend(messageBox);
-  }
+          dashboard.prepend(messageBox);
+        }
 
-  return;
-}
+        return;
+      }
 
       const oldMessage = document.getElementById("noMeterMessage");
       if (oldMessage) oldMessage.remove();
@@ -306,31 +312,25 @@ if (!meters.length) {
 
   async function loadDashboard() {
     const meterId = meterSelect.value;
-   // 🔥 DEMO DATA OVERRIDE
-const userName = localStorage.getItem("energyeye_user_name");
-/*
-if (userName === "demo") {
-  setText("todayConsumption", "18.5");
-  setText("weekConsumption", "102.3 kWh");
-  setText("monthConsumptionTop", "245.0 kWh");
-  setText("averageDaily", "8.2 kWh");
-  setText("estimatedBill", "1225.00 DZD");
 
-  setText("predictedMonth", "310.0 kWh");
-  setText("predictedBill", "Estimated final bill: 1550.00 DZD");
-
-  setText("aiConfidence", "96%");
-  setText("aiStatusText", "AI reading verified");
-
-  setText("statusText", "High usage detected yesterday");
-  setText("statusTextSecondary", "High usage detected yesterday");
-
-  updateAITimestamp();
-
-  return; // ⛔ skip real API
-}*/
     console.log("Selected meterId:", meterId);
+
+    await loadLatestAIReading();
+
     if (!meterId) {
+      return;
+    }
+
+    if (meterId === "demo-meter") {
+      setText("todayConsumption", "0");
+      setText("weekConsumption", "0 kWh");
+      setText("monthConsumptionTop", "0 kWh");
+      setText("averageDaily", "0 kWh");
+      setText("estimatedBill", "0.00 DZD");
+      setText("predictedMonth", "0 kWh");
+      setText("predictedBill", "Estimated final bill: 0 DZD");
+      setText("statusText", "AI data connected");
+      setText("statusTextSecondary", "AI data connected");
       return;
     }
 
@@ -360,9 +360,6 @@ if (userName === "demo") {
       setText("predictedMonth", `${predicted.toFixed(1)} kWh`);
       setText("predictedBill", `Estimated final bill: ${predictedBill.toFixed(2)} DZD`);
 
-      setText("aiConfidence", "96%");
-      setText("aiStatusText", "AI reading verified");
-
       let status = "Normal";
 
       if (todayVal > 50) {
@@ -374,10 +371,10 @@ if (userName === "demo") {
       setText("statusText", status);
       setText("statusTextSecondary", status);
 
-      updateAITimestamp();
-
     } catch (err) {
       console.error("LOAD DASHBOARD ERROR:", err);
+      setText("statusText", "No data");
+      setText("statusTextSecondary", "No data");
     }
   }
 
@@ -444,6 +441,7 @@ if (userName === "demo") {
   });
 
   setInterval(loadDashboard, 5000);
+  setInterval(loadLatestAIReading, 5000);
 }
 
 function updateAITimestamp() {
