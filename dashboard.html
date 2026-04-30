@@ -4,6 +4,76 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EnergyEye Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="dashboard">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2>EnergyEye</h2>
+    <p>Welcome User</p>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <h1>Welcome</h1>
+
+    <!-- TOP CARDS -->
+    <div class="cards">
+
+      <div class="card">
+        <h3>Current Usage</h3>
+        <h2>0 kWh</h2>
+      </div>
+
+      <div class="card">
+        <h3>Average Daily</h3>
+        <h2>0 kWh</h2>
+      </div>
+
+      <div class="card">
+        <h3>Estimated Bill</h3>
+        <h2>0.00 DZD</h2>
+      </div>
+
+      <div class="card">
+        <h3>Prediction</h3>
+        <h2>0 kWh</h2>
+      </div>
+
+    </div>
+
+    <!-- AI CARD -->
+    <div class="card">
+      <h3>AI Meter Reading</h3>
+
+      <h2 id="aiConfidence">--%</h2>
+      <p id="aiStatusText">Waiting for AI reading</p>
+
+      <p style="margin-top: 16px; font-weight: 600;">
+        Latest AI reading: <span id="aiReading">--</span>
+      </p>
+
+      <p id="aiLastUpdate" style="font-size: 14px; color: gray;">
+        Last update: --
+      </p>
+    </div>
+
+  </main>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EnergyEye Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
