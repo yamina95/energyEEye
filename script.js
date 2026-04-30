@@ -308,7 +308,7 @@ if (!meters.length) {
     const meterId = meterSelect.value;
    // 🔥 DEMO DATA OVERRIDE
 const userName = localStorage.getItem("energyeye_user_name");
-
+/*
 if (userName === "demo") {
   setText("todayConsumption", "18.5");
   setText("weekConsumption", "102.3 kWh");
@@ -328,7 +328,8 @@ if (userName === "demo") {
   updateAITimestamp();
 
   return; // ⛔ skip real API
-}
+}*/
+    console.log("Selected meterId:", meterId);
     if (!meterId) {
       return;
     }
