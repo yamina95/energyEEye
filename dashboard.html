@@ -6,66 +6,215 @@
   <title>EnergyEye Dashboard</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body>
 
-<div class="dashboard">
+<body class="dashboard-body">
+  <div class="dashboard-layout">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <h2>EnergyEye</h2>
-    <p>Welcome User</p>
-  </aside>
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo">
+          <span class="logo-mark"></span>
+          <span>EnergyEye</span>
+        </div>
 
-  <!-- MAIN -->
-  <main class="main">
-
-    <h1>Welcome</h1>
-
-    <!-- TOP CARDS -->
-    <div class="cards">
-
-      <div class="card">
-        <h3>Current Usage</h3>
-        <h2>0 kWh</h2>
+        <div class="user-mini">
+          <div class="avatar-circle" id="avatarLetter">U</div>
+          <div class="user-mini-text">
+            <small>Welcome</small>
+            <strong id="sidebarUserName">User</strong>
+          </div>
+        </div>
       </div>
 
-      <div class="card">
-        <h3>Average Daily</h3>
-        <h2>0 kWh</h2>
+      <nav class="sidebar-nav">
+        <a href="#" class="active">Dashboard</a>
+        <a href="#historySection">History</a>
+        <a href="#alertsSection">Alerts</a>
+        <a href="#settingsSection">Settings</a>
+      </nav>
+
+      <button class="btn btn-primary full logout-btn" id="logoutBtn">Logout</button>
+    </aside>
+
+    <main class="dashboard-main">
+      <div class="dashboard-topbar">
+        <div>
+          <p class="dashboard-label">Dashboard</p>
+          <h1 id="welcomeName">Welcome</h1>
+        </div>
+
+        <div class="topbar-actions">
+          <select id="meterSelect" class="meter-select">
+            <option value="demo-meter">SONELGAZ-MTR-001</option>
+          </select>
+        </div>
       </div>
 
-      <div class="card">
-        <h3>Estimated Bill</h3>
-        <h2>0.00 DZD</h2>
-      </div>
+      <section class="dashboard-grid-top">
+        <div class="main-card usage-card">
+          <div class="card-head">
+            <h3>Current Usage</h3>
+            <span>Today</span>
+          </div>
+          <div class="usage-main">
+            <div>
+              <div class="usage-value" id="todayConsumption">18.5</div>
+              <div class="usage-unit">kWh</div>
+            </div>
+            <div class="mini-stat-box">
+              <span>This Month</span>
+              <strong id="monthConsumptionTop">245.0 kWh</strong>
+            </div>
+          </div>
+        </div>
 
-      <div class="card">
-        <h3>Prediction</h3>
-        <h2>0 kWh</h2>
-      </div>
+        <div class="main-card average-card">
+          <div class="card-head">
+            <h3>Average Daily</h3>
+            <span>Month</span>
+          </div>
+          <div class="average-value" id="averageDaily">8.2 kWh</div>
+        </div>
 
-    </div>
+        <div class="main-card bill-card">
+          <div class="card-head">
+            <h3>Estimated Bill</h3>
+            <span>Month</span>
+          </div>
+          <div class="bill-value" id="estimatedBill">1225.00 DZD</div>
+        </div>
 
-    <!-- AI CARD -->
-    <div class="card">
-      <h3>AI Meter Reading</h3>
+        <div class="main-card alert-summary-card">
+          <div class="card-head">
+            <h3>Alert</h3>
+            <span>Status</span>
+          </div>
+          <div class="alert-summary" id="statusText">AI data connected</div>
+        </div>
+      </section>
 
-      <h2 id="aiConfidence">--%</h2>
-      <p id="aiStatusText">Waiting for AI reading</p>
+      <section class="dashboard-content-grid">
+        <div class="panel">
+          <div class="panel-header">
+            <h3>AI Meter Reading</h3>
+            <span id="aiLastUpdate">Updating...</span>
+          </div>
 
-      <p style="margin-top: 16px; font-weight: 600;">
-        Latest AI reading: <span id="aiReading">--</span>
-      </p>
+          <div class="settings-list">
+            <div class="setting-row">
+              <span>Latest Reading</span>
+              <strong id="aiReading">13944 kWh</strong>
+            </div>
+            <div class="setting-row">
+              <span>Confidence</span>
+              <strong id="aiConfidence">96%</strong>
+            </div>
+            <div class="setting-row">
+              <span>Status</span>
+              <strong id="aiStatusText">AI reading verified</strong>
+            </div>
+          </div>
+        </div>
 
-      <p id="aiLastUpdate" style="font-size: 14px; color: gray;">
-        Last update: --
-      </p>
-    </div>
+        <div class="panel">
+          <div class="panel-header">
+            <h3>Prediction</h3>
+            <span>End of month</span>
+          </div>
 
-  </main>
+          <div class="settings-list">
+            <div class="setting-row">
+              <span>Predicted Usage</span>
+              <strong id="predictedMonth">310.0 kWh</strong>
+            </div>
+            <div class="setting-row">
+              <span>Predicted Bill</span>
+              <strong id="predictedBill">1550.00 DZD</strong>
+            </div>
+          </div>
+        </div>
+      </section>
 
-</div>
+      <section class="dashboard-content-grid" id="historySection">
+        <div class="panel history-panel">
+          <div class="panel-header">
+            <h3>Consumption History</h3>
+            <span>Last 7 days</span>
+          </div>
+          <div class="bars" id="weeklyBars"></div>
+        </div>
 
-<script src="script.js"></script>
+        <div class="panel history-table-panel">
+          <div class="panel-header">
+            <h3>Recent Readings</h3>
+            <span>Latest meter values</span>
+          </div>
+          <div class="table-wrap">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Meter Reading</th>
+                  <th>Meter ID</th>
+                </tr>
+              </thead>
+              <tbody id="readingsTableBody">
+                <tr>
+                  <td>2026-04-24</td>
+                  <td>13944 kWh</td>
+                  <td>demo-meter</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard-content-grid" id="alertsSection">
+        <div class="panel alerts-panel">
+          <div class="panel-header">
+            <h3>Alerts</h3>
+            <span>Recent notifications</span>
+          </div>
+          <div class="alerts-list" id="alertsList">
+            <p class="empty-state">No alerts found.</p>
+          </div>
+        </div>
+
+        <div class="panel settings-panel" id="settingsSection">
+          <div class="panel-header">
+            <h3>Meter Settings</h3>
+            <span>Current selection</span>
+          </div>
+
+          <div class="settings-list">
+            <div class="setting-row">
+              <span>Meter ID</span>
+              <strong id="meterIdText">demo-meter</strong>
+            </div>
+            <div class="setting-row">
+              <span>Meter Number</span>
+              <strong id="meterNumberText">SONELGAZ-MTR-001</strong>
+            </div>
+            <div class="setting-row">
+              <span>Location</span>
+              <strong id="meterLocationText">Algiers</strong>
+            </div>
+            <div class="setting-row">
+              <span>This Week</span>
+              <strong id="weekConsumption">102.3 kWh</strong>
+            </div>
+            <div class="setting-row">
+              <span>Status</span>
+              <strong id="statusTextSecondary">AI data connected</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
