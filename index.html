@@ -4,53 +4,238 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EnergyEye</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
 
-  <section id="signin" class="signin-section section">
-    <div class="container signin-wrap">
+<header class="hero" id="home">
+  <div class="hero-overlay"></div>
 
-      <div class="signin-info">
-        <span class="eyebrow">Access your account</span>
-        <h2>Log in and view your electricity usage instantly</h2>
-        <p>
-          EnergyEye helps users monitor electricity usage, estimate bills,
-          and connect AI meter readings to the dashboard.
-        </p>
+  <div class="container">
+    <nav class="navbar">
+      <div class="logo">
+        <span class="logo-mark"></span>
+        <span>EnergyEye</span>
       </div>
 
-      <div class="auth-column">
-        <div class="signin-card">
-          <h3>Sign in</h3>
-          <p class="card-subtitle">Enter your username and password</p>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#signin">Sign in</a></li>
+        <li><a href="#contact" class="nav-btn">Contact</a></li>
+      </ul>
+    </nav>
 
-          <form id="loginForm">
-            <div class="input-group">
-              <label for="username">Username</label>
-              <input type="text" id="username" placeholder="Enter your username" required />
-            </div>
+    <div class="hero-content">
+      <div class="hero-badge">Smart electricity monitoring</div>
+      <h1>Electricity consumption under your control</h1>
+      <p>
+        EnergyEye helps users monitor electricity usage, estimate bills,
+        detect abnormal consumption and connect smart meter readings using AI.
+      </p>
 
-            <div class="input-group">
-              <label for="password">Password</label>
-              <input type="password" id="password" placeholder="Enter your password" required />
-            </div>
+      <div class="hero-actions">
+        <a href="#signin" class="btn btn-primary">Get started</a>
+        <a href="#features" class="btn btn-secondary">Explore features</a>
+      </div>
+    </div>
+  </div>
+</header>
 
-            <div class="signin-row">
-              <a href="#" onclick="forgotPassword()">Forgot password?</a>
-            </div>
+<section id="about" class="section">
+  <div class="container">
+    <div class="section-heading">
+      <span class="eyebrow">About platform</span>
+      <h2>Simple, clear, and built for smarter energy management</h2>
+      <p>
+        EnergyEye gives customers a modern interface to track electricity
+        consumption, identify usage patterns, reduce waste and understand bills.
+      </p>
+    </div>
 
-            <button type="submit" class="btn btn-primary full">Login</button>
+    <div class="about-grid">
+      <div class="about-card glass-card">
+        <h3>Real time visibility</h3>
+        <p>Track electricity usage with a cleaner and more understandable dashboard.</p>
+      </div>
 
-            <p id="loginMessage" class="small-text error-text"></p>
-          </form>
+      <div class="about-card glass-card">
+        <h3>AI meter reading</h3>
+        <p>ESP32 captures the meter image, then AI extracts the consumption value.</p>
+      </div>
+
+      <div class="about-card glass-card">
+        <h3>Smart alerts</h3>
+        <p>Detect unusual consumption and help users react before the bill increases.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features" class="section section-dark">
+  <div class="container">
+    <div class="section-heading center light">
+      <span class="eyebrow">Features</span>
+      <h2>Designed to feel modern, useful, and startup ready</h2>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Usage Tracking</h3>
+        <p>Monitor electricity consumption in a clean and readable way.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Visual Insights</h3>
+        <p>Understand daily and monthly patterns faster with structured data views.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔔</div>
+        <h3>Smart Alerts</h3>
+        <p>Stay informed about abnormal or high electricity consumption.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3>AI Reading</h3>
+        <p>Connect meter images to AI reading extraction and automated dashboard updates.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="signin" class="signin-section section">
+  <div class="container signin-wrap">
+    <div class="signin-info">
+      <span class="eyebrow">Access your account</span>
+      <h2>Log in and view your electricity usage instantly</h2>
+      <p>
+        Create an EnergyEye account, connect your Sonelgaz meter and access
+        your smart energy dashboard.
+      </p>
+    </div>
+
+    <div class="auth-column">
+      <div class="signin-card">
+        <h3>Sign in</h3>
+        <p class="card-subtitle">Enter your username and password</p>
+
+        <form id="loginForm">
+          <div class="input-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Enter your username" required />
+          </div>
+
+          <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Enter your password" required />
+          </div>
+
+          <div class="signin-row">
+            <a href="#" onclick="forgotPassword()">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary full">Login</button>
+
+          <button type="button" class="btn btn-primary full demo-btn" id="demoLoginBtn">
+            Try Demo Mode
+          </button>
+
+          <p id="loginMessage" class="small-text error-text"></p>
+        </form>
+      </div>
+
+      <div class="signin-card register-card">
+        <h3>Create account</h3>
+        <p class="card-subtitle">Register as a new EnergyEye user</p>
+
+        <form id="registerForm">
+          <div class="input-group">
+            <label for="registerUsername">Username</label>
+            <input type="text" id="registerUsername" placeholder="Choose a username" required />
+          </div>
+
+          <div class="input-group">
+            <label for="registerEmail">Email</label>
+            <input type="email" id="registerEmail" placeholder="Enter your email" required />
+          </div>
+
+          <div class="input-group">
+            <label for="registerPassword">Password</label>
+            <input type="password" id="registerPassword" placeholder="Minimum 6 characters" required />
+          </div>
+
+          <button type="submit" class="btn btn-primary full">Create Account</button>
+          <p id="registerMessage" class="small-text"></p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="section contact-section">
+  <div class="container">
+    <div class="contact-shell">
+      <div class="contact-left">
+        <span class="eyebrow">Contact</span>
+        <h2>Let’s talk about your needs</h2>
+        <p>Questions, comments, or suggestions? Send us a message and our team will get back to you shortly.</p>
+
+        <div class="contact-list">
+          <div class="contact-item">
+            <span class="contact-label">Phone</span>
+            <span>+213 555 000 000</span>
+          </div>
+
+          <div class="contact-item">
+            <span class="contact-label">Email</span>
+            <span>ContactEnergyEye@gmail.com</span>
+          </div>
         </div>
       </div>
 
-    </div>
-  </section>
+      <div class="contact-card">
+        <form class="contact-form">
+          <div class="two-cols">
+            <div class="input-group">
+              <label>First Name</label>
+              <input type="text" placeholder="First name" />
+            </div>
 
-  <script src="script.js"></script>
+            <div class="input-group">
+              <label>Last Name</label>
+              <input type="text" placeholder="Last name" />
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Email</label>
+            <input type="email" placeholder="Your email" />
+          </div>
+
+          <div class="input-group">
+            <label>Phone Number</label>
+            <input type="text" placeholder="Your phone number" />
+          </div>
+
+          <div class="input-group">
+            <label>Message</label>
+            <textarea rows="6" placeholder="Write your message..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary full">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="script.js"></script>
 </body>
 </html>
