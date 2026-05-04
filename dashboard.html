@@ -6,6 +6,60 @@
   <title>EnergyEye Dashboard</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
+
+<body class="dashboard-body">
+
+<div class="dashboard-layout">
+
+  <aside class="sidebar">
+    <h2>EnergyEye</h2>
+    <p id="sidebarUserName">User</p>
+    <button id="logoutBtn">Logout</button>
+  </aside>
+
+  <main class="dashboard-main">
+
+    <h1 id="welcomeName">Welcome</h1>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Current Usage</h3>
+        <h2 id="todayConsumption">0</h2>
+      </div>
+
+      <div class="card">
+        <h3>Average Daily</h3>
+        <h2 id="averageDaily">0</h2>
+      </div>
+
+      <div class="card">
+        <h3>Estimated Bill</h3>
+        <h2 id="estimatedBill">0</h2>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>AI Meter Reading</h3>
+      <h2 id="aiConfidence">--%</h2>
+      <p id="aiStatusText">Waiting...</p>
+      <p>Reading: <span id="aiReading">--</span></p>
+      <p id="aiLastUpdate">Last update: --</p>
+    </div>
+
+  </main>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EnergyEye Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
 <body>
 
 <div class="dashboard">
