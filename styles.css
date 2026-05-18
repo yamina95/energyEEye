@@ -1,3 +1,4 @@
+
 * {
   margin: 0;
   padding: 0;
@@ -388,6 +389,10 @@ img {
 
 .error-text {
   color: #dc2626;
+}
+
+.success-text {
+  color: #16a34a;
 }
 
 .contact-section {
